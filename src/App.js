@@ -26,7 +26,13 @@ function App() {
   useEffect(() => {
     fetch(genresUrl, options)
     .then(response => response.json())
-    .then(response => console.log(response))
+    .then(response => {
+      console.log('printing-------', response.data)
+      if(response) {
+        setGenres(response.data)
+      }
+      console.log('printing genres--------', genres)
+    })
     .catch(error => console.error(error))
   }, [genresUrl])
 
