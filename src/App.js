@@ -1,23 +1,42 @@
-import logo from './logo.svg';
+import React, {useEffect, useState} from 'react';
+import { Route, Routes } from 'react-router-dom';
 import './App.css';
 
+import Navigation from './components/navigation/navigation';
+import Home from './views/home/home';
+import Genres from './views/genres/genres';
+
+
 function App() {
+  const baseURL = process.env.REACT_APP_BASE_URL
+  console.log(baseURL)
+  const genresUrl = `${baseURL}/v1/anime?page=1`
+  const countryUrl = ''
+  const [genres, setGenres] = useState(null);
+
+  let options = {
+    method: 'GET',
+    headers: {
+      'Authorization': 'Bearer ' + process.env.REACT_APP_API_KEY,
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    } 
+  }
+
+  useEffect(() => {
+    fetch(genresUrl, options)
+    .then(response => response.json())
+    .then(response => console.log(response))
+    .catch(error => console.error(error))
+  }, [genresUrl])
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Navigation />
+      <Routes>
+        <Route path='/' element={<Home/>} />
+        <Route path='/genres' element={<Genres/>} />
+      </Routes>
     </div>
   );
 }
